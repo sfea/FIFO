@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+// что за дефайны? вы считаете что у меня на компьютере это тоже заработает?
 #define FOLDER "/home-local/student/Загрузки"
 #define FILE1 "/home-local/student/Загрузки/fifo_file.txt"
 
@@ -18,7 +19,7 @@ int main(int argc, char** argv)
 
 	if (argc > 2)
 		printf("ERROR_IN_COUNT_OF_ARG\n");
-
+	// првоеряет на ошибки сразу а не после 5 строк кода
 	if (pp == -1)
 		printf("PIPE_ERROR\n");
 
