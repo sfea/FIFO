@@ -22,6 +22,7 @@ int main(int argc, char** argv)
 	old_new(fd, STDOUT_FILENO);
 	
 	close(fd);
+	// мы не проходили такой функции - замените на изученные на семинарах
 	unlink(FILE);
 	return 0;
 }
