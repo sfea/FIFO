@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include "mylib.h"
 
 #define FILE "./fifo_file.txt"
 
