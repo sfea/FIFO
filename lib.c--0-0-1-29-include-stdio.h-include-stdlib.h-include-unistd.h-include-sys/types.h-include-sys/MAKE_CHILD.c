@@ -4,10 +4,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include "mylib.h"
 
 // что за дефайны? вы считаете что у меня на компьютере это тоже заработает?
-#define FOLDER "/home-local/student/Загрузки"
-#define FILE1 "/home-local/student/Загрузки/fifo_file.txt"
+
+//исправил
+#define FILE1 "./fifo_file.txt"
 
 int main(int argc, char** argv)
 {
@@ -18,26 +20,35 @@ int main(int argc, char** argv)
 	int fd = 0;
 
 	if (argc > 2)
-		printf("ERROR_IN_COUNT_OF_ARG\n");
+	{
+		perror("ARGUMENTS");
+		exit(1);
+	}
 	// првоеряет на ошибки сразу а не после 5 строк кода
+	
+	//не понял комментария выше
 	if (pp == -1)
-		printf("PIPE_ERROR\n");
+	{
+		perror("PIPE");
+		exit(1);
+	}
 
 	frk = fork();
 
 	if (frk == 0)
 	{
 		dup2(pipefd[1], STDOUT_FILENO);
-		execlp("ls", "ls", FOLDER, "-l", NULL);
-		printf("EXEC_ERROR\n");
+		execlp("ls", "ls", argv[1], "-l", NULL);
+		perror("EXEC");
+		exit(1);
 	}
 	else if (frk < 0)
-		printf("FORK_ERROR\n");
+		perror("FORK_1");
 
         frk = fork();
 
         if (frk == -1)
-                printf("FORK_ERROR\n");
+                perror("FORK_2");
 
 	if (frk == 0)
 	{
@@ -45,15 +56,22 @@ int main(int argc, char** argv)
 
 		error = mkfifo(FILE1, 0666);
 		if (error < 0)
-			printf("ERROR_IN_FIFOFILE_CREATING\n");
+		{
+			perror("FIFO");
+			exit(1);
+		}
 
 		fd = open(FILE1, O_WRONLY);
 		if (fd < 0)
-			printf("ERROR_IN_OPENING_FILE\n");
+		{
+			perror("OPEN");
+			exit(1);
+		}
 		old_new(pipefd[0], fd);
 
 		close(pipefd[0]);
 	}
+	
 	else if (frk > 0)
 	{
 		close(pipefd[1]);
