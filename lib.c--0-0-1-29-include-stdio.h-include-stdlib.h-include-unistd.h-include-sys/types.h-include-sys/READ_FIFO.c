@@ -12,13 +12,19 @@ int main(int argc, char** argv)
 {
 	int fd = 0;
 	int f = fork();
-	if (argc > 2)
-		printf("INVALID_COUNT_OF_ARGS\n");
-
+	if (argc > 1)
+	{
+		perror("ARGUMENTS");
+		exit(1);
+	}
+	
 	fd = open(FILE, O_RDONLY);
 
 	if (fd < 0)
-		printf("ERROR_WITH_FIFOFILE_OPENING\n");
+	{
+		perror("FIFO");
+		exit(1);
+	}
 
 	old_new(fd, STDOUT_FILENO);
 	
@@ -27,6 +33,11 @@ int main(int argc, char** argv)
 	
 	//исправлено
 	if (f = 0)
+	{
 		execlp("rm", "rm", FILE);
+		perror("EXEC");
+		exit(1);
+	}
+	
 	return 0;
 }
