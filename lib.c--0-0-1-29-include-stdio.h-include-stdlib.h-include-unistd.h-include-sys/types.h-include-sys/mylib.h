@@ -1,34 +1,35 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+#include <string.h>
 
 // extern - убрать, сделать с заголовчным файлом .h
 
 // чтение и запись у вас не буферизованные - нужно проверять, что за раз момет не считаться
 // запршаиваемое количестов байт. Надо разделить на две функции - считывание и запись .
 
-extern int old_new(int old_fd, int new_fd)
+int new_read(int old_fd, char* buf)
 {
-	char buf[1024] = {0};
 	int re = 1;
-	int wr = 0;
+	int i = 1;
 
-	while (re > 0)
+	for (i = 1;;i++)
 	{
-		re = read(old_fd, buf, 1024);
+		if (re = read(old_fd, buf, 1024) == 1024)
+			buf = realloc(buf, i*1024);
+		else
+		{
+			buf = realloc(buf, (i - 1)*1024 + re); 
+			break;
+		}
 
 		if (re < 0)
-		return -1;
-
-		wr = write(new_fd, buf, re);
-
-		if (wr < 0)
-		return -1;
-
-		if (re < 1024 || buf[0] == '\0')
-		break;
+			return -1;
 	}
+}
+
+int new_write(char* buf, int new_fd)
+{
+	int wr = write(new_fd, buf, (int)strlen(buf));
+
+	if (wr < 0)
+		return -1;
 }
